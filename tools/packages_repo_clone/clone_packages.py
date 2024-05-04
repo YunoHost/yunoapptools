@@ -71,24 +71,24 @@ def generate_mirrors():
             "service": "github",
         }
 
-        create_mirror = requests.post(
+        create_mirror_request = requests.post(
             "https://git.yunohost.org/api/v1/repos/migrate",
             headers=api_header,
             params=f"access_token={FORGEJO_TOKEN}",
             json=create_mirror_data,
         )
 
-        if create_mirror.status_code == 409:
+        if create_mirror_request.status_code == 409:
             print(f"A repo named '{repo_name}' is already existing.")
             continue
 
-        if create_mirror.status_code == 422:
+        if create_mirror_request.status_code == 422:
             print("We're rate limited. Waiting for 1 minute before continuing.")
             time.sleep(60)
 
-        if create_mirror.status_code not in (201, 422):
+        if create_mirror_request.status_code not in (201, 422):
             raise Exception(
-                "Request failed:", create_mirror.status_code, create_mirror.text
+                "Request failed:", create_mirror_request.status_code, create_mirror_request.text
             )
 
         # configuring properly the new repository
