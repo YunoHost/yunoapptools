@@ -1,0 +1,3 @@
+APPS_REPO_ROOT = "/path/to/the/catalog/repo"
+GITHUB_TOKEN = "ghp_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+FORGEJO_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
