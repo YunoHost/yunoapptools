@@ -1,8 +1,8 @@
-import requests
+import os
 import toml
 import time
-import os
 import config
+import requests
 
 
 APPS_REPO_ROOT = config.APPS_REPO_ROOT
