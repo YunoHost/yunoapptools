@@ -55,63 +55,62 @@ def generate_mirrors():
         if app[0] not in mirror_list:
             print(f"A mirror for '{repo_name}' must be created.")
 
-            api_header = {
-                "Content-type": "application/json",
-                "Authorization": "{FORGEJO_TOKEN}",
-            }
+        print(f"A mirror for '{repo_name}' must be created.")
 
-            create_mirror_data = {
-                "clone_addr": repo_url,
-                "auth_token": GITHUB_TOKEN,
-                "mirror": True,
-                "repo_name": repo_name,
-                "repo_owner": "YunoHost-Apps",
-                "service": "github",
-            }
+        api_header = {
+            "Content-type": "application/json",
+            "Authorization": "{FORGEJO_TOKEN}",
+        }
 
-            create_mirror = requests.post(
-                "https://git.yunohost.org/api/v1/repos/migrate",
-                headers=api_header,
-                params=f"access_token={FORGEJO_TOKEN}",
-                json=create_mirror_data,
+        create_mirror_data = {
+            "clone_addr": repo_url,
+            "auth_token": GITHUB_TOKEN,
+            "mirror": True,
+            "repo_name": repo_name,
+            "repo_owner": "YunoHost-Apps",
+            "service": "github",
+        }
+
+        create_mirror = requests.post(
+            "https://git.yunohost.org/api/v1/repos/migrate",
+            headers=api_header,
+            params=f"access_token={FORGEJO_TOKEN}",
+            json=create_mirror_data,
+        )
+
+        if create_mirror.status_code == 409:
+            print(f"A repo named '{repo_name}' is already existing.")
+            continue
+
+        if create_mirror.status_code == 422:
+            print("We're rate limited. Waiting for 1 minute before continuing.")
+            time.sleep(60)
+
+        if create_mirror.status_code not in (201, 422):
+            raise Exception(
+                "Request failed:", create_mirror.status_code, create_mirror.text
             )
 
-            if create_mirror.status_code != 201:
-                if create_mirror.status_code == 409:
-                    print(f"A repo named '{repo_name}' is already existing.")
+        # configuring properly the new repository
+        settings_mirror_data = {
+            "has_packages": False,
+            "has_projects": False,
+            "has_releases": False,
+            "has_wiki": False,
+        }
 
-                    if create_mirror.status_code == 422:
-                        print(
-                            f"We're rate limited. Waiting for 1 minute before continuing."
-                        )
-                        time.sleep(60)
+        settings_mirror = requests.patch(
+            f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}",
+            headers=api_header,
+            params=f"access_token={FORGEJO_TOKEN}",
+            json=settings_mirror_data,
+        )
 
-                else:
-                    raise Exception(
-                        "Request failed:", create_mirror.status_code, create_mirror.text
-                    )
+        if settings_mirror.status_code != 200:
+            raise Exception("Request failed:", settings_mirror.text)
 
-            else:
-                # configuring properly the new repository
-                settings_mirror_data = {
-                    "has_packages": False,
-                    "has_projects": False,
-                    "has_releases": False,
-                    "has_wiki": False,
-                }
-
-                settings_mirror = requests.patch(
-                    f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}",
-                    headers=api_header,
-                    params=f"access_token={FORGEJO_TOKEN}",
-                    json=settings_mirror_data,
-                )
-
-                if settings_mirror.status_code != 200:
-                    raise Exception("Request failed:", settings_mirror.text)
-                else:
-                    print("Repository cloned and configured.")
-                    time.sleep(5)  # Sleeping for 5 seconds to cooldown the API
+        print("Repository cloned and configured.")
+        time.sleep(5)  # Sleeping for 5 seconds to cooldown the API
 
 
 generate_mirrors()
