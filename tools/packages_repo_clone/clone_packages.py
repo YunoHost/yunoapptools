@@ -42,6 +42,9 @@ def generate_mirror_list():
 
 
 def request_handling_rate_limit(method, *args, **kwargs):
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 10
+
     while True:
         response = method(*args, **kwargs)
 
