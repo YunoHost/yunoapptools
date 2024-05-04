@@ -43,6 +43,9 @@ def generate_mirrors():
         repo_name = app[0]
         repo_url = app[1]
         
+        if "https://github.com/YunoHost-Apps/" not in repo_url:
+            continue
+        
         if app[0] not in mirror_list:
             print(f"A mirror for '{repo_name}' must be created.")
             
