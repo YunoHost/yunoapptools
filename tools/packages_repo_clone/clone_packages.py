@@ -1,4 +1,3 @@
-from pathlib import Path
 import requests
 import toml
 import time
