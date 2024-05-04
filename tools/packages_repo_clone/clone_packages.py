@@ -14,7 +14,7 @@ catalog = toml.load(open(os.path.join(APPS_REPO_ROOT, "apps.toml"), encoding="ut
 
 def generate_catalog_repo_list():
     # list the apps in the catalog
-    
+
     apps_repos = []
     for app in catalog:
         url = catalog.get(app)["url"]
@@ -25,7 +25,7 @@ def generate_catalog_repo_list():
 
 def generate_mirror_list():
     # list the existing mirrors on our forgejo
-    
+
     data = requests.get("https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror").json()["data"]
     existing_clones = []
     for repo in data:
@@ -34,20 +34,19 @@ def generate_mirror_list():
 
 
 def generate_mirrors():
-    
     app_catalog = generate_catalog_repo_list()
     mirror_list = generate_mirror_list()
-    
+
     for app in app_catalog:
         repo_name = app[0]
         repo_url = app[1]
-        
+
         if "https://github.com/YunoHost-Apps/" not in repo_url:
             continue
-        
+
         if app[0] not in mirror_list:
             print(f"A mirror for '{repo_name}' must be created.")
-            
+
             api_header = {'Content-type': 'application/json', 'Authorization': '{FORGEJO_TOKEN}'}
             create_mirror_data = {
                 "clone_addr": repo_url,
@@ -66,7 +65,7 @@ def generate_mirrors():
                         time.sleep(60)
                 else:
                     raise Exception('Request failed:', create_mirror.status_code, create_mirror.text)
-                
+
             else:
                 # configuring properly the new repository
                 settings_mirror_data = {
