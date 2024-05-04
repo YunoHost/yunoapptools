@@ -31,7 +31,9 @@ def generate_mirror_list():
 
     existing_clones = []
 
-    data = requests.get("https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror").json()["data"]
+    data = requests.get(
+        "https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror"
+    ).json()["data"]
 
     for repo in data:
         existing_clones.append(repo["name"])
@@ -53,7 +55,10 @@ def generate_mirrors():
         if app[0] not in mirror_list:
             print(f"A mirror for '{repo_name}' must be created.")
 
-            api_header = {'Content-type': 'application/json', 'Authorization': '{FORGEJO_TOKEN}'}
+            api_header = {
+                "Content-type": "application/json",
+                "Authorization": "{FORGEJO_TOKEN}",
+            }
 
             create_mirror_data = {
                 "clone_addr": repo_url,
@@ -61,21 +66,30 @@ def generate_mirrors():
                 "mirror": True,
                 "repo_name": repo_name,
                 "repo_owner": "YunoHost-Apps",
-                "service": "github"
-                }
+                "service": "github",
+            }
 
-            create_mirror = requests.post("https://git.yunohost.org/api/v1/repos/migrate", headers=api_header, params=f"access_token={FORGEJO_TOKEN}", json=create_mirror_data)
+            create_mirror = requests.post(
+                "https://git.yunohost.org/api/v1/repos/migrate",
+                headers=api_header,
+                params=f"access_token={FORGEJO_TOKEN}",
+                json=create_mirror_data,
+            )
 
             if create_mirror.status_code != 201:
                 if create_mirror.status_code == 409:
                     print(f"A repo named '{repo_name}' is already existing.")
 
                     if create_mirror.status_code == 422:
-                        print(f"We're rate limited. Waiting for 1 minute before continuing.")
+                        print(
+                            f"We're rate limited. Waiting for 1 minute before continuing."
+                        )
                         time.sleep(60)
 
                 else:
-                    raise Exception('Request failed:', create_mirror.status_code, create_mirror.text)
+                    raise Exception(
+                        "Request failed:", create_mirror.status_code, create_mirror.text
+                    )
 
             else:
                 # configuring properly the new repository
@@ -83,13 +97,18 @@ def generate_mirrors():
                     "has_packages": False,
                     "has_projects": False,
                     "has_releases": False,
-                    "has_wiki": False
-                    }
+                    "has_wiki": False,
+                }
 
-                settings_mirror = requests.patch(f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}", headers=api_header, params=f"access_token={FORGEJO_TOKEN}", json=settings_mirror_data)
+                settings_mirror = requests.patch(
+                    f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}",
+                    headers=api_header,
+                    params=f"access_token={FORGEJO_TOKEN}",
+                    json=settings_mirror_data,
+                )
 
                 if settings_mirror.status_code != 200:
-                    raise Exception('Request failed:', settings_mirror.text)
+                    raise Exception("Request failed:", settings_mirror.text)
                 else:
                     print("Repository cloned and configured.")
                     time.sleep(5)  # Sleeping for 5 seconds to cooldown the API
