@@ -41,6 +41,20 @@ def generate_mirror_list():
     return existing_clones
 
 
+def request_handling_rate_limit(method, *args, **kwargs):
+    while True:
+        response = method(*args, **kwargs)
+
+        # we are not reated limited
+        if response.status_code != 422:
+            break
+
+        print("We're rate limited. Waiting for 1 minute before continuing.")
+        time.sleep(60)
+
+    return response
+
+
 def generate_mirrors():
     app_catalog = generate_catalog_repo_list()
     mirror_list = generate_mirror_list()
@@ -71,7 +85,8 @@ def generate_mirrors():
             "service": "github",
         }
 
-        create_mirror_request = requests.post(
+        create_mirror_request = request_handling_rate_limit(
+            requests.post,
             "https://git.yunohost.org/api/v1/repos/migrate",
             headers=api_header,
             params=f"access_token={FORGEJO_TOKEN}",
@@ -82,11 +97,7 @@ def generate_mirrors():
             print(f"A repo named '{repo_name}' is already existing.")
             continue
 
-        if create_mirror_request.status_code == 422:
-            print("We're rate limited. Waiting for 1 minute before continuing.")
-            time.sleep(60)
-
-        if create_mirror_request.status_code not in (201, 422):
+        if create_mirror_request.status_code != 201:
             raise Exception(
                 "Request failed:", create_mirror_request.status_code, create_mirror_request.text
             )
@@ -99,7 +110,8 @@ def generate_mirrors():
             "has_wiki": False,
         }
 
-        settings_mirror_request = requests.patch(
+        settings_mirror_request = request_handling_rate_limit(
+            requests.patch,
             f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}",
             headers=api_header,
             params=f"access_token={FORGEJO_TOKEN}",
