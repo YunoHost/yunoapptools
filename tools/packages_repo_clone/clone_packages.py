@@ -99,15 +99,15 @@ def generate_mirrors():
             "has_wiki": False,
         }
 
-        settings_mirror = requests.patch(
+        settings_mirror_request = requests.patch(
             f"https://git.yunohost.org/api/v1/repos/YunoHost-Apps/{repo_name}",
             headers=api_header,
             params=f"access_token={FORGEJO_TOKEN}",
             json=settings_mirror_data,
         )
 
-        if settings_mirror.status_code != 200:
-            raise Exception("Request failed:", settings_mirror.text)
+        if settings_mirror_request.status_code != 200:
+            raise Exception("Request failed:", settings_mirror_request.text)
 
         print("Repository cloned and configured.")
         time.sleep(5)  # Sleeping for 5 seconds to cooldown the API
