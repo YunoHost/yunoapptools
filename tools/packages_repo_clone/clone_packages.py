@@ -48,7 +48,7 @@ def request_handling_rate_limit(method, *args, **kwargs):
     while True:
         response = method(*args, **kwargs)
 
-        # we are not reated limited
+        # we are not rate limited
         if response.status_code != 422:
             break
 
@@ -66,11 +66,13 @@ def generate_mirrors():
         repo_name = app[0]
         repo_url = app[1]
 
-        if "https://github.com/YunoHost-Apps/" not in repo_url:
+        if not repo_url.startswith("https://github.com/YunoHost-Apps/"):
+            # do not care about repos that are not in the YunoHost-Apps org
             continue
 
-        if app[0] not in mirror_list:
-            print(f"A mirror for '{repo_name}' must be created.")
+        if repo_name in mirror_list:
+            # the mirror is already existing
+            continue
 
         print(f"A mirror for '{repo_name}' must be created.")
 
@@ -102,7 +104,9 @@ def generate_mirrors():
 
         if create_mirror_request.status_code != 201:
             raise Exception(
-                "Request failed:", create_mirror_request.status_code, create_mirror_request.text
+                "Request failed:",
+                create_mirror_request.status_code,
+                create_mirror_request.text,
             )
 
         # configuring properly the new repository
