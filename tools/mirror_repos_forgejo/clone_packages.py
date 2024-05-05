@@ -140,5 +140,7 @@ def generate_mirrors():
         print("Repository cloned and configured.")
         time.sleep(5)  # Sleeping for 5 seconds to cooldown the API
 
+    print("Done.")
+
 
 generate_mirrors()
