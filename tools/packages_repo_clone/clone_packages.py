@@ -31,13 +31,21 @@ def generate_mirror_list():
 
     existing_clones = []
 
-    data = requests.get(
-        "https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror",
-        timeout=60,
-    ).json()["data"]
+    page = 1
+    while True:
+        data = requests.get(
+            f"https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror&page={page}&limit=100",
+            timeout=60,
+        ).json()["data"]
 
-    for repo in data:
-        existing_clones.append(repo["name"])
+        # once the data list is empty the whole available pages are consumed
+        if not data:
+            break
+
+        for repo in data:
+            existing_clones.append(repo["name"])
+
+        page += 1
 
     return existing_clones
 
