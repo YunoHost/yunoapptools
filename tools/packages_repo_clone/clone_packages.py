@@ -32,7 +32,8 @@ def generate_mirror_list():
     existing_clones = []
 
     data = requests.get(
-        "https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror"
+        "https://git.yunohost.org/api/v1/repos/search?topic=false&includeDesc=false&priority_owner_id=17&mode=mirror",
+        timeout=60,
     ).json()["data"]
 
     for repo in data:
