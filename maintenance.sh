@@ -60,7 +60,7 @@ rebuild_catalog() {
     date
     update_apps_repo
     update_apps_cache
-    ./list_builder.py -l .
+    ./list_builder.py -l .apps -c .apps_cache
 }
 
 autoupdate_app_sources_error_msg="[autoupdate_app_sources] App sources auto-update failed miserably!"
@@ -69,7 +69,7 @@ autoupdate_app_sources() {
     update_apps_repo
     update_apps_cache
     autoupdate_app_sources/venv/bin/python3 autoupdate_app_sources/autoupdate_app_sources.py \
-        -l . --latest-commit-weekly --edit --commit --pr --paste -j1
+        -l .apps -c .apps_cache --latest-commit-weekly --edit --commit --pr --paste -j1
 }
 
 update_app_levels_error_msg="[update_app_levels] Updating apps level failed miserably!"
@@ -77,7 +77,7 @@ update_app_levels() {
     date
     update_apps_repo
     update_apps_cache
-    python3 update_app_levels.py -l .
+    python3 update_app_levels.py -l .apps -c .apps_cache
 }
 
 safe_run() {
