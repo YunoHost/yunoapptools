@@ -7,18 +7,19 @@
 
 # Python files
 venv/
+.venv/
 __pycache__/
 .mypy_cache/
 
 # Github authentication files
-/tools/.github_*
+.github_*
 
 # yunohost specific cache/output dirs
 .apps_cache
 builds*
 
 # Static assets
-tools/app_generator/static
+app_generator/static
 
 # local debuggings
 package_linter/
