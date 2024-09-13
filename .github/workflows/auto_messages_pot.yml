@@ -1,8 +1,8 @@
 name: Auto updates messages.pot for readme_generator
+
 on:
   push:
-    branches:
-      - master
+    branches: [main]
 
 jobs:
   pybabel:
