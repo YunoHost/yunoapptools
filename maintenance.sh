@@ -15,11 +15,10 @@ update_apps_repo() {
     else
         git clone https://github.com/YunoHost/apps.git .apps
     fi
-    .cache/tools/app_caches.py -l .cache/apps/ -c .apps_cache -d -j20
 }
 
 update_apps_cache() {
-    ./tools/app_caches.py -d -l . -c .apps_cache -j20
+    ./app_caches.py -d -l . -c .apps_cache -j20
 }
 
 git_pull_and_restart_services() {
@@ -59,22 +58,25 @@ git_pull_and_restart_services() {
 rebuild_catalog_error_msg="[list_builder] Rebuilding the application list failed miserably!"
 rebuild_catalog() {
     date
-    update_app_cache
-    ./tools/list_builder.py -l .
+    update_apps_repo
+    update_apps_cache
+    ./list_builder.py -l .
 }
 
 autoupdate_app_sources_error_msg="[autoupdate_app_sources] App sources auto-update failed miserably!"
 autoupdate_app_sources() {
     date
-    update_app_cache
-    tools/autoupdate_app_sources/venv/bin/python3 tools/autoupdate_app_sources/autoupdate_app_sources.py \
+    update_apps_repo
+    update_apps_cache
+    autoupdate_app_sources/venv/bin/python3 autoupdate_app_sources/autoupdate_app_sources.py \
         -l . --latest-commit-weekly --edit --commit --pr --paste -j1
 }
 
 update_app_levels_error_msg="[update_app_levels] Updating apps level failed miserably!"
 update_app_levels() {
     date
-    update_app_cache
+    update_apps_repo
+    update_apps_cache
     python3 update_app_levels.py -l .
 }
 
