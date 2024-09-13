@@ -1,5 +1,6 @@
 tqdm
 jinja2
+aiohttp
 sanic==21.12.2
 GitPython
 PyGithub
