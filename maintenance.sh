@@ -18,7 +18,7 @@ update_apps_repo() {
 }
 
 update_apps_cache() {
-    ./app_caches.py -d -l . -c .apps_cache -j20
+    ./app_caches.py -d -l .apps -c .apps_cache -j20
 }
 
 git_pull_and_restart_services() {
