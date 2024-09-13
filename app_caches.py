@@ -144,6 +144,7 @@ def __run_for_catalog():
     if args.verbose:
         logging.getLogger().setLevel(logging.INFO)
 
+    apps_path = get_apps_repo.from_args(args)
     cache_path = get_apps_repo.cache_path(args)
     cache_path.mkdir(exist_ok=True, parents=True)
 
