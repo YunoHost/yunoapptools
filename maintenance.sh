@@ -1,135 +1,101 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-workdir=$(realpath $(dirname "$0"))
-cd $workdir
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-function update_venv()
-{
+update_venv() {
     if [ -d "venv" ]; then
         venv/bin/pip install -r requirements.txt >/dev/null
     fi
 }
 
-function git_pull_and_update_cron_and_restart_services_if_needed()
-{
-    if ! git pull &>/dev/null; then
-        sendxmpppy "[apps repo] Couldn't pull, maybe local changes are present?"
-        exit 1
+update_apps_repo() {
+    if [ -d ".apps" ]; then
+        git -C .apps pull
+    else
+        git clone https://github.com/YunoHost/apps.git .apps
     fi
-
-    # Cron
-    cat cron | sed "s@__BASEDIR__@$workdir@g" > /etc/cron.d/app_list
-
-    # App store
-    chown -R appstore store
-    pushd store >/dev/null
-    modified_after_service_start="$(find *.py translations/ templates/ assets/ -newermt "$(systemctl show --property=ActiveEnterTimestamp appstore | cut -d= -f2 | cut -d' ' -f2-3)")"
-    if [ -n "$modified_after_service_start" ]
-    then
-        update_venv
-
-        pushd assets >/dev/null
-            ./tailwindcss-linux-x64 --input tailwind-local.css --output tailwind.css --minify
-        popd >/dev/null
-        systemctl restart appstore
-        sleep 3
-    fi
-    popd >/dev/null
-
-    systemctl --quiet is-active appstore || sendxmpppy "[appstore] Uhoh, failed to (re)start the appstore service?"
-
-    # App generator
-    chown -R appgenerator tools/app_generator
-    pushd tools/app_generator >/dev/null
-    modified_after_service_start="$(find *.py translations/ templates/ static/ -newermt "$(systemctl show --property=ActiveEnterTimestamp appgenerator | cut -d= -f2 | cut -d' ' -f2-3)")"
-    if [ -n "$modified_after_service_start" ]
-    then
-        update_venv
-        pushd assets >/dev/null
-            ./tailwindcss-linux-x64 --input tailwind-local.css --output tailwind.css --minify
-        popd >/dev/null
-        systemctl restart appgenerator
-        sleep 3
-    fi
-    popd >/dev/null
-
-    systemctl --quiet is-active appgenerator || sendxmpppy "[appgenerator] Uhoh, failed to (re)start the appgenerator service?"
-
-    # Autoreadme
-    pushd tools/readme_generator >/dev/null
-    modified_after_service_start="$(find *.py translations/ templates/ -newermt "$(systemctl show --property=ActiveEnterTimestamp webhooks | cut -d= -f2 | cut -d' ' -f2-3)")"
-    if [ -n "$modified_after_service_start" ]
-    then
-        update_venv
-        systemctl restart webhooks
-        sleep 3
-    fi
-    popd >/dev/null
-
-    # Autoreadme
-    pushd tools/webhooks >/dev/null
-    modified_after_service_start="$(find *.py -newermt "$(systemctl show --property=ActiveEnterTimestamp webhooks | cut -d= -f2 | cut -d' ' -f2-3)")"
-    if [ -n "$modified_after_service_start" ]
-    then
-        update_venv
-        systemctl restart webhooks
-        sleep 3
-    fi
-    popd >/dev/null
-
-    pushd tools/autoupdate_app_sources >/dev/null
-    update_venv
-    popd >/dev/null
-
-    systemctl --quiet is-active webhooks || sendxmpppy "[autoreadme] Uhoh, failed to (re)start the autoreadme service?"
+    .cache/tools/app_caches.py -l .cache/apps/ -c .apps_cache -d -j20
 }
 
-function update_app_cache()
-{
+update_apps_cache() {
     ./tools/app_caches.py -d -l . -c .apps_cache -j20
 }
 
-function rebuild_catalog()
-{
-    log=$workdir/app_list_auto_update.log
-    date >> $log
-    git_pull_and_update_cron_and_restart_services_if_needed
-    update_app_cache
-    ./tools/list_builder.py -l . &>> $log || sendxmpppy "[listbuilder] Rebuilding the application list failed miserably"
+git_pull_and_restart_services() {
+    commit="$(git rev-parse HEAD)"
+
+    if ! git pull &>/dev/null; then
+        sendxmpppy "[apps-tools] Couldn't pull, maybe local changes are present?"
+        exit 1
+    fi
+
+    if [[ "$(git rev-parse HEAD)" == "$commit" ]]; then
+        return
+    fi
+
+    # Cron
+    cat cron | sed "s@__BASEDIR__@$SCRIPT_DIR@g" > /etc/cron.d/apps_tools
+
+    pushd app_generator > /dev/null
+        update_venv
+        pushd assets >/dev/null
+            ./tailwindcss-linux-x64 --input tailwind-local.css --output tailwind.css --minify
+        popd >/dev/null
+    popd > /dev/null
+    systemctl restart appgenerator
+    sleep 3
+    systemctl --quiet is-active appgenerator || sendxmpppy "[appgenerator] Uhoh, failed to (re)start the appgenerator service?"
+
+
+    update_venv
+
+    systemctl restart webhooks
+    sleep 3
+    systemctl --quiet is-active webhooks || sendxmpppy "[autoreadme] Uhoh, failed to (re)start the autoreadme service?"
+
 }
 
-function autoupdate_app_sources()
-{
-    log=$workdir/app_sources_auto_update.log
-    date >> $log
-    git_pull_and_update_cron_and_restart_services_if_needed
+rebuild_catalog_error_msg="[list_builder] Rebuilding the application list failed miserably!"
+rebuild_catalog() {
+    date
+    update_app_cache
+    ./tools/list_builder.py -l .
+}
+
+autoupdate_app_sources_error_msg="[autoupdate_app_sources] App sources auto-update failed miserably!"
+autoupdate_app_sources() {
+    date
     update_app_cache
     tools/autoupdate_app_sources/venv/bin/python3 tools/autoupdate_app_sources/autoupdate_app_sources.py \
-        -l . --latest-commit-weekly --edit --commit --pr --paste -j1 \
-    &> $log || sendxmpppy "[appsourcesautoupdate] App sources auto-update failed miserably"
+        -l . --latest-commit-weekly --edit --commit --pr --paste -j1
 }
 
-function update_app_levels()
-{
+update_app_levels_error_msg="[update_app_levels] Updating apps level failed miserably!"
+update_app_levels() {
+    date
     update_app_cache
-    pushd tools/update_app_levels >/dev/null
-        python3 update_app_levels.py -l .
-    popd >/dev/null
+    python3 update_app_levels.py -l .
 }
 
-function fetch_main_dashboard()
-{
-    pushd store >/dev/null
-        venv/bin/python3 fetch_main_dashboard.py 2>&1 | grep -v 'Following Github server redirection'
-    popd >/dev/null
+safe_run() {
+    logfile="$SCRIPT_DIR/$1.log"
+    error_msg_var="${1}_error_msg"
+    if ! "$@" &> "$logfile"; then
+        sendxmpppy "${!error_msg_var}"
+    fi
 }
 
+main() {
+    cd "$SCRIPT_DIR"
 
-function fetch_level_history()
-{
-    pushd store >/dev/null
-        venv/bin/python3 fetch_level_history.py
-    popd >/dev/null
+    # Update self, then re-exec to prevent an issue with modified bash scripts
+    if [[ -z "${APPS_TOOLS_UPDATED:-}" ]]; then
+        git_pull_and_restart_services
+        APPS_TOOLS_UPDATED=1 exec "$0" "$@"
+    fi
+
+    safe_run "$@"
 }
 
-$1
+main "$@"
