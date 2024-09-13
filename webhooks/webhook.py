@@ -20,9 +20,11 @@ from sanic import HTTPResponse, Request, Sanic, response
 # add apps/tools to sys.path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from appslib import get_apps_repo
 from readme_generator.make_readme import generate_READMEs
 
 TOOLS_DIR = Path(__file__).resolve().parent.parent
+APPS_REPO = None
 
 DEBUG = False
 UNSAFE = False
@@ -272,7 +274,7 @@ def reject_wishlist(request: Request, pr_infos: dict, reason=None) -> HTTPRespon
 
 def generate_and_commit_readmes(repo: Repo) -> bool:
     assert repo.working_tree_dir is not None
-    generate_READMEs(Path(repo.working_tree_dir))
+    generate_READMEs(Path(repo.working_tree_dir), APPS_REPO)
 
     repo.git.add("README*.md")
     repo.git.add("ALL_README.md")
@@ -300,6 +302,7 @@ def git_repo_rebase_testing_fast_forward(repo: Repo) -> bool:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    get_apps_repo.add_args(parser)
     parser.add_argument("-d", "--debug", action="store_true")
     parser.add_argument(
         "-u",
@@ -308,6 +311,9 @@ def main() -> None:
         help="Disable Github signature checks on webhooks, for debug only.",
     )
     args = parser.parse_args()
+
+    global APPS_REPO
+    APPS_REPO = get_apps_repo.from_args(args)
 
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
