@@ -49,9 +49,9 @@ git_pull_and_restart_services() {
 
     update_venv
 
-    systemctl restart webhooks
+    systemctl restart yunohost_app_webhooks
     sleep 3
-    systemctl --quiet is-active webhooks || sendxmpppy "[autoreadme] Uhoh, failed to (re)start the autoreadme service?"
+    systemctl --quiet is-active yunohost_app_webhooks || sendxmpppy "[autoreadme] Uhoh, failed to (re)start the autoreadme service?"
 
 }
 
