@@ -83,7 +83,7 @@ update_app_levels() {
 safe_run() {
     logfile="$SCRIPT_DIR/$1.log"
     error_msg_var="${1}_error_msg"
-    if ! "$@" &> "$logfile"; then
+    if ! "$@" &>> "$logfile"; then
         sendxmpppy "${!error_msg_var}"
     fi
 }
