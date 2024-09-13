@@ -38,7 +38,7 @@ git_pull_and_restart_services() {
 
     pushd app_generator > /dev/null
         update_venv
-        pushd assets >/dev/null
+        pushd static >/dev/null
             ./tailwindcss-linux-x64 --input tailwind-local.css --output tailwind.css --minify
         popd >/dev/null
     popd > /dev/null
