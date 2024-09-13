@@ -60,7 +60,7 @@ rebuild_catalog() {
     date
     update_apps_repo
     update_apps_cache
-    ./list_builder.py -l .apps -c .apps_cache
+    ./list_builder.py -l .apps -c .apps_cache ../catalog/default
 }
 
 autoupdate_app_sources_error_msg="[autoupdate_app_sources] App sources auto-update failed miserably!"
