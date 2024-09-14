@@ -77,7 +77,7 @@ update_app_levels() {
     date
     update_apps_repo
     update_apps_cache
-    venv/bin/python3 update_app_levels.py -l .apps -c .apps_cache
+    venv/bin/python3 update_app_levels/update_app_levels.py -r "git@github.com:YunoHost/apps.git" -c .apps_cache
 }
 
 safe_run() {
