@@ -63,7 +63,7 @@ class GitlabAPI:
     def __init__(self, upstream: str):
         # Find gitlab api root...
         self.forge_root = self.get_forge_root(upstream).rstrip("/")
-        self.project_path = upstream.replace(self.forge_root, "").lstrip("/")
+        self.project_path = upstream.replace(self.forge_root, "").strip("/")
         self.project_id = self.find_project_id(self.project_path)
 
     def get_forge_root(self, project_url: str) -> str:
