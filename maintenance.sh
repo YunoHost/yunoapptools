@@ -4,9 +4,10 @@ set -Eeuo pipefail
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 update_venv() {
-    if [ -d "venv" ]; then
-        venv/bin/pip install -r requirements.txt >/dev/null
+    if [ ! -d "venv" ]; then
+        python3 -m venv venv
     fi
+    venv/bin/pip install -r requirements.txt >/dev/null
 }
 
 update_apps_repo() {
@@ -18,7 +19,7 @@ update_apps_repo() {
 }
 
 update_apps_cache() {
-    ./app_caches.py -d -l .apps -c .apps_cache -j20
+    venv/bin/python3 ./app_caches.py -d -l .apps -c .apps_cache -j20
 }
 
 git_pull_and_restart_services() {
