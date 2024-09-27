@@ -34,18 +34,7 @@ git_pull_and_restart_services() {
     fi
 
     # Cron
-    cat cron | sed "s@__BASEDIR__@$SCRIPT_DIR@g" > /etc/cron.d/apps_tools
-
-    pushd app_generator > /dev/null
-        update_venv
-        pushd static >/dev/null
-            ./tailwindcss-linux-x64 --input tailwind-local.css --output tailwind.css --minify
-        popd >/dev/null
-    popd > /dev/null
-    systemctl restart appgenerator
-    sleep 3
-    systemctl --quiet is-active appgenerator || sendxmpppy "[appgenerator] Uhoh, failed to (re)start the appgenerator service?"
-
+    sed "s@__BASEDIR__@$SCRIPT_DIR@g" > /etc/cron.d/apps_tools < cron
 
     update_venv
 
