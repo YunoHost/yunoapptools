@@ -61,7 +61,9 @@ async def github_get(request: Request) -> HTTPResponse:
 
 @APP.route("/github", methods=["POST"])
 async def github_post(request: Request) -> HTTPResponse:
-    if UNSAFE and (signatures_reply := check_webhook_signatures(request)):
+    if UNSAFE:
+        logging.warning("Unsafe webhook!")
+    elif signatures_reply := check_webhook_signatures(request):
         return signatures_reply
 
     event = request.headers.get("X-Github-Event")
@@ -94,7 +96,6 @@ async def get_pr_infos(request: Request) -> dict:
 
 
 def check_webhook_signatures(request: Request) -> Optional[HTTPResponse]:
-    logging.warning("Unsafe webhook!")
     header_signature = request.headers.get("X-Hub-Signature")
     if header_signature is None:
         logging.error("no header X-Hub-Signature")
