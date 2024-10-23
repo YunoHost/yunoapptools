@@ -14,29 +14,21 @@ TEST_APP_COMMIT_ID = "8f788213b363a46a5b6faa8f844d86d4adac9446"
 
 def test_running_make_readme():
     with tempfile.TemporaryDirectory() as tempdir:
-        tempdir = Path(tempdir)
-        temporary_tested_app_directory = tempdir / TEST_APP_NAME
+        test_app_dir = Path(tempdir) / TEST_APP_NAME
 
-        subprocess.check_call(
-            ["git", "clone", "-q", TEST_APP_REPO, temporary_tested_app_directory]
-        )
-        subprocess.check_call(
-            ["git", "checkout", "-q", TEST_APP_COMMIT_ID],
-            cwd=temporary_tested_app_directory,
-        )
+        cmd = ["git", "clone", "-q", TEST_APP_REPO, test_app_dir]
+        subprocess.check_call(cmd)
+
+        cmd = ["git", "checkout", "-q", TEST_APP_COMMIT_ID]
+        subprocess.check_call(cmd, cwd=test_app_dir)
 
         # Now run test...
-        subprocess.check_call(
-            [
-                TEST_DIRECTORY.parent / "make_readme.py",
-                temporary_tested_app_directory,
-            ]
-        )
+        cmd = [TEST_DIRECTORY.parent / "make_readme.py", test_app_dir]
+        subprocess.check_call(cmd)
 
-        assert (
-            open(TEST_DIRECTORY / "README.md").read()
-            == open(temporary_tested_app_directory / "README.md").read()
-        )
+        test_content = (TEST_DIRECTORY / "README.md").read_text()
+        result_content = (test_app_dir / "README.md").read_text()
+        assert test_content == result_content
 
 
 if __name__ == "__main__":
