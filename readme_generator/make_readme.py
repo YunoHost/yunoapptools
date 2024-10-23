@@ -76,7 +76,6 @@ def generate_READMEs(app_path: Path, apps_repo_path: Path):
                 continue
 
             if sentence not in translations._catalog:
-                print(translations._catalog)
                 print(f"The sentence: {repr(sentence)} is not in the target catalog")
                 is_fully_translated = False
                 break
