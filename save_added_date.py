@@ -14,7 +14,13 @@ import appslib.get_apps_repo as get_apps_repo
 def git_bisect(repo: Repo, is_newer: Callable[[Commit], bool]) -> Commit | None:
     # Start with whole repo
     first_commit = repo.git.rev_list("HEAD", reverse=True, max_parents=0)
+    try:
+        # If a git bisect is in progress, just erase it
+        repo.git.bisect("log")
     repo.git.bisect("reset")
+    except Exception:
+        pass
+
     repo.git.bisect("start", "--no-checkout", "HEAD", first_commit)
 
     while True:
