@@ -646,7 +646,7 @@ def paste_on_haste(data):
     # NB: we hardcode this here and can't use the yunopaste command
     # because this script runs on the same machine than haste is hosted on...
     # and doesn't have the proper front-end LE cert in this context
-    SERVER_HOST = "http://paste.yunohost.org"
+    SERVER_HOST = "https://paste.yunohost.org"
     TIMEOUT = 3
     try:
         url = f"{SERVER_HOST}/documents"
