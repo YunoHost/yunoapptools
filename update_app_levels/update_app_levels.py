@@ -38,7 +38,7 @@ def github_token() -> Optional[str]:
 
 
 def get_ci_results() -> dict[str, dict[str, Any]]:
-    return requests.get(CI_RESULTS_URL, timeout=10).json()
+    return requests.get(CI_RESULTS_URL, timeout=60).json()
 
 
 def ci_result_is_outdated(result) -> bool:
