@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import tempfile
+import shutil
 import subprocess
 
 from pathlib import Path
@@ -28,7 +29,10 @@ def test_running_make_readme():
 
         test_content = (TEST_DIRECTORY / "README.md").read_text()
         result_content = (test_app_dir / "README.md").read_text()
-        assert test_content == result_content
+        if test_content != result_content:
+            shutil.copyfile(TEST_DIRECTORY / "README.md", TEST_DIRECTORY / "README_failed.md")
+
+        assert test_content == result_content, f"Failed readme was copied to {TEST_DIRECTORY / 'README_failed.md'}"
 
 
 if __name__ == "__main__":
