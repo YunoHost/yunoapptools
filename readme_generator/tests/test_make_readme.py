@@ -30,9 +30,13 @@ def test_running_make_readme():
         test_content = (TEST_DIRECTORY / "README.md").read_text()
         result_content = (test_app_dir / "README.md").read_text()
         if test_content != result_content:
-            shutil.copyfile(TEST_DIRECTORY / "README.md", TEST_DIRECTORY / "README_failed.md")
+            shutil.copyfile(
+                TEST_DIRECTORY / "README.md", TEST_DIRECTORY / "README_failed.md"
+            )
 
-        assert test_content == result_content, f"Failed readme was copied to {TEST_DIRECTORY / 'README_failed.md'}"
+        assert (
+            test_content == result_content
+        ), f"Failed readme was copied to {TEST_DIRECTORY / 'README_failed.md'}"
 
 
 if __name__ == "__main__":
