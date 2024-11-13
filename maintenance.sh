@@ -70,14 +70,6 @@ update_app_levels() {
     venv/bin/python3 update_app_levels/update_app_levels.py -r "git@github.com:YunoHost/apps.git" -c .apps_cache
 }
 
-safe_run() {
-    logfile="$SCRIPT_DIR/$1.log"
-    error_msg_var="${1}_error_msg"
-    if ! "$@" &>> "$logfile"; then
-        sendxmpppy "${!error_msg_var}"
-    fi
-}
-
 main() {
     cd "$SCRIPT_DIR"
 
@@ -87,7 +79,10 @@ main() {
         APPS_TOOLS_UPDATED=1 exec "$0" "$@"
     fi
 
-    safe_run "$@"
+    if ! "$@"; then
+        error_msg_var="${1}_error_msg"
+        sendxmpppy "${!error_msg_var}"
+    fi
 }
 
 main "$@"
