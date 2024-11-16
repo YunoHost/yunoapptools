@@ -36,8 +36,8 @@ msgid ""
 "the Github repo"
 msgstr ""
 "Copia esta aplicación antes se trabajar en ella,utilizando el botón ['use "
-"esta plantilla'](https://github.com/"
-"new?template_name=example_ynh&template_owner=YunoHost) en el repositorio de "
+"esta plantilla'](https://github.com/new?"
+"template_name=example_ynh&template_owner=YunoHost) en el repositorio de "
 "Github"
 
 #: templates/README.md.j2:5
@@ -90,8 +90,8 @@ msgid ""
 "Edit files under the `doc/` directory ([see the page about documenting "
 "packages](https://yunohost.org/packaging_app_doc))"
 msgstr ""
-"Edita los archivos en el directorio`doc/` ([más "
-"informaciones](https://yunohost.org/packaging_app_doc))"
+"Edita los archivos en el directorio`doc/` ([más informaciones](https://"
+"yunohost.org/packaging_app_doc))"
 
 #: templates/README.md.j2:12
 msgid ""
@@ -221,8 +221,8 @@ msgid ""
 "Please send your pull request to the [`testing` branch]"
 "(%(testing_branch_url)s)."
 msgstr ""
-"Por favor enviar sus correcciones a la [rama "
-"`testing`](%(testing_branch_url)s)."
+"Por favor enviar sus correcciones a la [rama `testing`]"
+"(%(testing_branch_url)s)."
 
 #: templates/README.md.j2:83
 msgid "To try the `testing` branch, please proceed like that:"

@@ -80,9 +80,9 @@ msgid ""
 msgstr ""
 "Voeg een `LICENSE`-bestand voor het pakket toe. NB: deze licentie is niet "
 "per se dezelfde als de licentie van de upstream app - het is enkel de "
-"licentie voor de code van het pakket en je bent vrij deze zelf te kiezen! ("
-"Mocht je niet weten welke te kiezen, wij bevelen [de AGPL-3](https://www.gnu."
-"org/licenses/agpl-3.0.txt) aan)"
+"licentie voor de code van het pakket en je bent vrij deze zelf te kiezen! "
+"(Mocht je niet weten welke te kiezen, wij bevelen [de AGPL-3](https://www."
+"gnu.org/licenses/agpl-3.0.txt) aan)"
 
 #: templates/README.md.j2:11
 msgid ""
