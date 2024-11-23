@@ -79,7 +79,7 @@ async def github_post(request: Request) -> HTTPResponse:
         )
         pr_infos = await get_pr_infos(request)
 
-        if valid_pr_comment:
+        if valid_pr_comment and pr_infos:
             return on_pr_comment(request, pr_infos)
         else:
             return response.empty()
@@ -88,7 +88,9 @@ async def github_post(request: Request) -> HTTPResponse:
 
 
 async def get_pr_infos(request: Request) -> dict:
-    pr_infos_url = request.json["issue"]["pull_request"]["url"]
+    pr_infos_url = request.json["issue"].get("pull_request", {}).get("url")
+    if not pr_infos_url:
+        return {}
     async with aiohttp.ClientSession() as session:
         async with session.get(pr_infos_url) as resp:
             pr_infos = await resp.json()
