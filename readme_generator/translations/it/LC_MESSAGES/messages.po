@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-03-31 19:33+0200\n"
-"PO-Revision-Date: 2024-03-26 22:06+0000\n"
+"PO-Revision-Date: 2024-11-18 15:54+0000\n"
 "Last-Translator: Tommi <surfing@tommi.space>\n"
 "Language-Team: Italian <https://translate.yunohost.org/projects/yunohost/"
 "readme-generator/it/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3.1\n"
+"X-Generator: Weblate 5.4.3\n"
 "Generated-By: Babel 2.14.0\n"
 
 #: templates/ALL_README.md.j2:11
@@ -134,8 +134,6 @@ msgid "Install %(application_name)s with YunoHost"
 msgstr "Installa %(application_name)s con YunoHost"
 
 #: templates/README.md.j2:28
-#, fuzzy
-#| msgid "Read this README is other languages."
 msgid "Read this README in other languages."
 msgstr "Leggi questo README in altre lingue."
 
@@ -183,7 +181,7 @@ msgstr "Attenzione/informazioni importanti"
 
 #: templates/README.md.j2:59
 msgid "Antifeatures"
-msgstr "Anti-funzionalità"
+msgstr ""
 
 #: templates/README.md.j2:66
 msgid "Documentation and resources"

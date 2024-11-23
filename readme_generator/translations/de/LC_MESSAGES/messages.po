@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-03-31 19:33+0200\n"
-"PO-Revision-Date: 2024-03-26 22:06+0000\n"
-"Last-Translator: Christian Wehrli <christian@chw.onl>\n"
+"PO-Revision-Date: 2024-11-17 14:54+0000\n"
+"Last-Translator: Éric Gaspar <junk.eg@free.fr>\n"
 "Language-Team: German <https://translate.yunohost.org/projects/yunohost/"
 "readme-generator/de/>\n"
 "Language: de\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3.1\n"
+"X-Generator: Weblate 5.4.3\n"
 "Generated-By: Babel 2.14.0\n"
 
 #: templates/ALL_README.md.j2:11
@@ -73,23 +73,17 @@ msgid "Add a `LICENSE` file for the package."
 msgstr "Fügen Sie eine `LICENSE`-Datei für das Paket hinzu."
 
 #: templates/README.md.j2:10
-#, fuzzy
-#| msgid ""
-#| "Add a `LICENSE` file for the package. NB: this LICENSE file is not meant "
-#| "to necessarily be the LICENSE of the upstream app - it is only the "
-#| "LICENSE you want this package's code to published with ;). We recommend "
-#| "to use [the AGPL-3](https://www.gnu.org/licenses/agpl-3.0.txt)."
 msgid ""
 "NB: this `LICENSE` file is not meant to necessarily be the same LICENSE as "
 "the upstream app - it is only the LICENSE you want this package's code to "
 "published with and you can choose it freely! (If you don't know which to "
 "choose, we recommend [the AGPL-3](https://www.gnu.org/licenses/agpl-3.0.txt))"
 msgstr ""
-"Eine `LICENSE`-Datei für das Paket hinzufügen. NB: Diese LICENSE-Datei muss "
-"nicht zwangsläufig die LIZENZ der Upstream-App sein - es ist nur die LIZENZ, "
-"unter welcher Sie den Code dieses Pakets veröffentlichen wollen ;). Wir "
-"empfehlen, [die AGPL-3](https://www.gnu.org/licenses/agpl-3.0.txt) zu "
-"verwenden."
+"NB: Diese `LICENSE`-Datei muss nicht unbedingt dieselbe LICENSE wie die "
+"Upstream-App sein - es ist nur die LICENSE, mit der Code dieses Pakets "
+"veröffentlicht werden soll, und Sie können sie frei wählen! (Wenn Sie nicht "
+"wissen, welche Sie wählen sollen, empfehlen wir [die AGPL-3](https://www.gnu."
+"org/licenses/agpl-3.0.txt))"
 
 #: templates/README.md.j2:11
 #, fuzzy
@@ -100,8 +94,8 @@ msgid ""
 "Edit files under the `doc/` directory ([see the page about documenting "
 "packages](https://yunohost.org/packaging_app_doc))"
 msgstr ""
-"Die [Skript-Helper-Dokumentation](https://yunohost.org/"
-"packaging_apps_helpers) verwenden"
+"Bearbeiten Sie Dateien im Verzeichnis `doc/` ([siehe Seite zum Dokumentieren "
+"von Paketen](https://yunohost.org/packaging_app_doc))"
 
 #: templates/README.md.j2:12
 msgid ""
@@ -144,8 +138,6 @@ msgid "Install %(application_name)s with YunoHost"
 msgstr "%(application_name)s mit YunoHost installieren"
 
 #: templates/README.md.j2:28
-#, fuzzy
-#| msgid "Read this README is other languages."
 msgid "Read this README in other languages."
 msgstr "Dieses README in anderen Sprachen lesen."
 

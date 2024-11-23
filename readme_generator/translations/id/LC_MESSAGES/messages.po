@@ -36,8 +36,8 @@ msgid ""
 "the Github repo"
 msgstr ""
 "Salin aplikasi ini sebelum mengerjakannya, menggunakan tombol ['Gunakan "
-"templat ini'](https://github.com/"
-"new?template_name=example_ynh&template_owner=YunoHost) di repo Github"
+"templat ini'](https://github.com/new?"
+"template_name=example_ynh&template_owner=YunoHost) di repo Github"
 
 #: templates/README.md.j2:5
 msgid "Edit the `manifest.toml` with app specific info"
@@ -149,9 +149,8 @@ msgid ""
 "If you don't have YunoHost, please consult [the guide](https://yunohost.org/"
 "install) to learn how to install it."
 msgstr ""
-"Bila Anda tidak mempunyai YunoHost, silakan berkonsultasi dengan "
-"[panduan](https://yunohost.org/install) untuk mempelajari bagaimana untuk "
-"memasangnya."
+"Bila Anda tidak mempunyai YunoHost, silakan berkonsultasi dengan [panduan]"
+"(https://yunohost.org/install) untuk mempelajari bagaimana untuk memasangnya."
 
 #: templates/README.md.j2:33
 msgid "Overview"
