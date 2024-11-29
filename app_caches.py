@@ -17,8 +17,6 @@ from appslib.utils import get_catalog
 import appslib.get_apps_repo as get_apps_repo
 
 
-
-
 class AppDir:
     def __init__(self, name: str, path: Path) -> None:
         self.name = name
