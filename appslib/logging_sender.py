@@ -26,10 +26,6 @@ def notify(message: str, channel: str, markdown: bool = False) -> None:
         "/usr/bin/matrix-commander-rs",
         "--message",
         message,
-        "--credentials",
-        "/etc/matrix-commander-rs/credentials.json",
-        "--store",
-        "/etc/matrix-commander-rs/store",
         "--room",
         chan_dir[channel],
     ]
