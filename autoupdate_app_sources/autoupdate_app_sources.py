@@ -295,6 +295,10 @@ class AppAutoUpdater:
                     dict(sorted(match.groupdict().items())).values() or match.groups()
                 )
 
+            if app_id == "photoprism":
+                # Stupid fix for Photoprism whose package version is 2024.x while app version is 24.x
+                tag = f"20{tag}"
+
             # Then remove leading v
             tag = tag.lstrip("v")
             return tag
