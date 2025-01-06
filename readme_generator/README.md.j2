@@ -29,9 +29,9 @@ It shall NOT be edited by hand.
 
 {{ manifest.description['en'] }}
 
-{% if upstream.website %}[🌐 Official app website]({{ upstream.website }}){% endif %}
-{% if upstream.website and upstream.demo %} | {% endif %}
-{% if upstream.demo %}[Demo]({{ upstream.demo }}){% endif %}
+{% if manifest.upstream.website %}[🌐 Official app website]({{ manifest.upstream.website }}){% endif %}
+{% if manifest.upstream.website and manifest.upstream.demo %} | {% endif %}
+{% if manifest.upstream.demo %}[Demo]({{ manifest.upstream.demo }}){% endif %}
 
 **Shipped version:** {{ manifest.version }}
 
